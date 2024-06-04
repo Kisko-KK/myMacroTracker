@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "100786639510",
+    "project_id": "mymacrotracker-e20e3",
+    "storage_bucket": "mymacrotracker-e20e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:100786639510:android:9f66cfc9f2f3429d2b28b7",
+        "android_client_info": {
+          "package_name": "com.example.mymacrotracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArMDGL6UIJCZnoO6NYwgrsr_UjVbOk_-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
