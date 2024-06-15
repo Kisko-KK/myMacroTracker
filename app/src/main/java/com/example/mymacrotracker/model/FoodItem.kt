@@ -120,7 +120,6 @@ data class Food(
     val carbs: Double = 0.0,
     val calories: Double = 0.0
 ) {
-    // Prazan konstruktor potreban za deserializaciju iz Firebase Firestore-a
     constructor() : this("", 0.0, 0.0, 0.0, 0.0)
 }
 
@@ -129,7 +128,6 @@ data class FoodDiaryItem(
     val title: String,
     val subtitle : String
 ) {
-    // Prazan konstruktor potreban za deserializaciju iz Firebase Firestore-a
     constructor() : this("","")
 }
 

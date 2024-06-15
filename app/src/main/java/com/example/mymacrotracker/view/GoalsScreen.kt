@@ -128,7 +128,6 @@ fun GoalsScreen(firebaseViewModel: FirebaseViewModel) {
                             firebaseViewModel.setCaloriesGoal(caloriesGoalValue)
                             firebaseViewModel.setStepsGoal(stepsGoalValue)
                         } else {
-                            // Ovdje možete postaviti poruku o pogrešci ako unos nije valjan
                         }
                     }
                 },

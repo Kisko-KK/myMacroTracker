@@ -68,7 +68,6 @@ fun SearchScreen(viewModel: SearchViewModel, navController : NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Prikaži indikator učitavanja ako je isLoading true
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),

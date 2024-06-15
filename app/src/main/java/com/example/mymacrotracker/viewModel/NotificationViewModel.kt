@@ -17,8 +17,8 @@ class NotificationViewModel() : ViewModel() {
 
     fun createNotificationChannel(channelId: String, context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "MakeitEasy"
-            val desc = "My Channel MakeitEasy"
+            val name = "Name"
+            val desc = "Sesc"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(channelId, name, importance).apply {
                 description = desc

@@ -62,15 +62,15 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
         return currentUser?.uid;
     }
 
-    fun addFood(userId: String, food: Food) {
+    fun addFood( food: Food) {
 
         val db = FirebaseFirestore.getInstance()
         val date = getCurrentDate()
 
-        val diaryCollectionRef = db.collection("users").document(userId).collection("diary_$date")
+        val diaryCollectionRef = getUserId()?.let { db.collection("users").document(it).collection("diary_$date") }
 
-        // Stvaranje novog dokumenta za dnevnik ako ne postoji
-        diaryCollectionRef.get().addOnSuccessListener { snapshot ->
+
+        diaryCollectionRef?.get()?.addOnSuccessListener { snapshot ->
             if (snapshot.isEmpty) {
                 val newDiary = hashMapOf(
                     "foods" to listOf(food)
@@ -83,7 +83,6 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
                         println("Greška prilikom dodavanja novog dnevnika: $e")
                     }
             } else {
-                // Ako postoji dnevnik za odabrani datum, dodaj hranu u postojeći dnevnik
                 val diaryDocRef = snapshot.documents[0].reference
                 diaryDocRef.update("foods", FieldValue.arrayUnion(food))
                     .addOnSuccessListener {
@@ -93,7 +92,7 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
                         println("Greška prilikom dodavanja hrane u postojeći dnevnik: $e")
                     }
             }
-        }.addOnFailureListener { e ->
+        }?.addOnFailureListener { e ->
             println("Greška prilikom provjere dnevnika: $e")
         }
 
@@ -103,9 +102,10 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
     fun getFoodDiaryItems(date : String) {
         val db = FirebaseFirestore.getInstance()
 
-        val diaryCollectionRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2").collection("diary_$date").document("diary_$date")
+        val diaryCollectionRef =
+            getUserId()?.let { db.collection("users").document(it).collection("diary_$date").document("diary_$date") }
 
-        diaryCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+        diaryCollectionRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val diary = documentSnapshot.toObject(Diary::class.java)
                 val foodList = diary?.foods
@@ -121,7 +121,7 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
                 println("Dnevnik ne postoji za datum: $date")
                 foodDiaryItems.postValue(emptyList())
             }
-        }.addOnFailureListener { e ->
+        }?.addOnFailureListener { e ->
             println("Greška prilikom dohvaćanja dnevnika hrane: $e")
         }
     }
@@ -129,28 +129,29 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
     fun getFoodItems(date : String) {
         val db = FirebaseFirestore.getInstance()
 
-        val diaryCollectionRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2").collection("diary_$date").document("diary_$date")
+        val diaryCollectionRef =
+            getUserId()?.let { db.collection("users").document(it).collection("diary_$date").document("diary_$date") }
 
-        diaryCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+        diaryCollectionRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val diary = documentSnapshot.toObject(Diary::class.java)
-                val foodList = diary?.foods ?: emptyList() // Ako nema hrane, postavljamo praznu listu
+                val foodList = diary?.foods ?: emptyList()
 
                 foodItems.postValue(foodList)
             } else {
                 println("Dnevnik ne postoji za datum: $date")
                 foodItems.postValue(emptyList())
             }
-        }.addOnFailureListener { e ->
+        }?.addOnFailureListener { e ->
             println("Greška prilikom dohvaćanja dnevnika hrane: $e")
         }
     }
 
     fun getCaloriesGoal() {
         val db = FirebaseFirestore.getInstance()
-        val userDocumentRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2")
+        val userDocumentRef = getUserId()?.let { db.collection("users").document(it) }
 
-        userDocumentRef.get().addOnSuccessListener { documentSnapshot ->
+        userDocumentRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val caloriesGoals = documentSnapshot.getDouble("caloriesGoal")
                 // Ažurirajte LiveData s dohvaćenom vrijednošću
@@ -158,16 +159,16 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
             } else {
                 Log.d("FirebaseViewModel", "User document does not exist")
             }
-        }.addOnFailureListener { e ->
+        }?.addOnFailureListener { e ->
             Log.e("FirebaseViewModel", "Error getting user document", e)
         }
     }
 
     fun getStepsGoal() {
         val db = FirebaseFirestore.getInstance()
-        val userDocumentRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2")
+        val userDocumentRef = getUserId()?.let { db.collection("users").document(it) }
 
-        userDocumentRef.get().addOnSuccessListener { documentSnapshot ->
+        userDocumentRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val stepsGoals = documentSnapshot.getDouble("stepsGoal")
 
@@ -175,71 +176,64 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
             } else {
                 Log.d("FirebaseViewModel", "User document does not exist")
             }
-        }.addOnFailureListener { e ->
+        }?.addOnFailureListener { e ->
             Log.e("FirebaseViewModel", "Error getting user document", e)
         }
     }
 
     fun getCurrentSteps() {
         val db = FirebaseFirestore.getInstance()
-        val userDocumentRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2")
+        val userDocumentRef = getUserId()?.let { db.collection("users").document(it) }
 
-        userDocumentRef.get().addOnSuccessListener { documentSnapshot ->
+        userDocumentRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val currentStepsTemp = documentSnapshot.getDouble("currentSteps")
 
                 currentStepsFirebase.value = currentStepsTemp ?: 0.0
 
-                // Ovdje se postavlja currentStepsFirebase na vrijednost iz Firebase-a
             } else {
                 Log.d("FirebaseViewModel", "User document does not exist")
             }
-        }.addOnFailureListener { e ->
+        }?.addOnFailureListener { e ->
             Log.e("FirebaseViewModel", "Error getting user document", e)
         }
     }
 
     fun setCurrentSteps(steps: Double) {
         val db = FirebaseFirestore.getInstance()
-        val userDocumentRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2")
+        val userDocumentRef = getUserId()?.let { db.collection("users").document(it) }
 
-        userDocumentRef
-            .update("currentSteps", steps)
-            .addOnSuccessListener {
-                Log.d("FirebaseViewModel", "Current steps updated successfully to: $steps")
-            }
-            .addOnFailureListener { e ->
-                Log.e("FirebaseViewModel", "Error updating current steps", e)
-            }
+        userDocumentRef?.update("currentSteps", steps)?.addOnSuccessListener {
+            Log.d("FirebaseViewModel", "Current steps updated successfully to: $steps")
+        }?.addOnFailureListener { e ->
+            Log.e("FirebaseViewModel", "Error updating current steps", e)
+        }
     }
 
     fun setStepsGoal(steps: Double) {
         val db = FirebaseFirestore.getInstance()
-        val userDocumentRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2")
+        val userDocumentRef = getUserId()?.let { db.collection("users").document(it) }
 
-        userDocumentRef
-            .update("stepsGoal", steps)
-            .addOnSuccessListener {
-                Log.d("FirebaseViewModel", "Current steps updated successfully to: $steps")
-                navController.navigate("mainScreen")
-            }
-            .addOnFailureListener { e ->
-                Log.e("FirebaseViewModel", "Error updating steps goal", e)
-            }
+        userDocumentRef?.update("stepsGoal", steps)?.addOnSuccessListener {
+            Log.d("FirebaseViewModel", "Current steps updated successfully to: $steps")
+            navController.navigate("mainScreen")
+        }?.addOnFailureListener { e ->
+            Log.e("FirebaseViewModel", "Error updating steps goal", e)
+        }
     }
+
     fun setCaloriesGoal(cal: Double) {
         val db = FirebaseFirestore.getInstance()
-        val userDocumentRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2")
+        val userDocumentRef = getUserId()?.let { db.collection("users").document(it) }
 
-        userDocumentRef
-            .update("caloriesGoal", cal)
-            .addOnSuccessListener {
-                Log.d("FirebaseViewModel", "Current steps updated successfully to: $cal")
-            }
-            .addOnFailureListener { e ->
-                Log.e("FirebaseViewModel", "Error updating calories goal", e)
-            }
+        userDocumentRef?.set(mapOf("caloriesGoal" to cal))?.addOnSuccessListener {
+            Log.d("FirebaseViewModel", "Calories goal updated successfully to: $cal")
+        }?.addOnFailureListener { e ->
+            Log.e("FirebaseViewModel", "Error updating calories goal", e)
+        }
     }
+
+
 
 
     fun calculateTotalMacros(foodDiaryItems: State<List<Food>?>): Triple<Double, Double, Double> {
@@ -249,7 +243,6 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
 
         val foods = foodDiaryItems.value
 
-        // Provjeri je li lista hrane dostupna i iteriraj kroz nju
         foods?.let { foodList ->
             for (food in foodList) {
                 totalCarbs += food.carbs
@@ -278,9 +271,10 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
 
     fun deleteFoodDiaryItem(foodDiaryItem: FoodDiaryItem, date: String) {
         val db = FirebaseFirestore.getInstance()
-        val diaryCollectionRef = db.collection("users").document("ZVXZJfnhj3T8s6mntVSrdsQPupj2").collection("diary_$date").document("diary_$date")
+        val diaryCollectionRef =
+            getUserId()?.let { db.collection("users").document(it).collection("diary_$date").document("diary_$date") }
 
-        diaryCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+        diaryCollectionRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val diary = documentSnapshot.toObject(Diary::class.java)
                 val foodList = diary?.foods
@@ -301,7 +295,7 @@ class FirebaseViewModel(private val navController: NavController) : ViewModel(){
             } else {
                 Log.d("FirebaseViewModel", "Food diary document does not exist for date: $date")
             }
-        }.addOnFailureListener { e ->
+        }?.addOnFailureListener { e ->
             Log.e("FirebaseViewModel", "Error getting food diary document", e)
         }
     }

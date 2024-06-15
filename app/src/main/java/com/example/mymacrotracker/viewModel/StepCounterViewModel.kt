@@ -41,7 +41,7 @@ class StepCounterViewModel(private val context: Context) : ViewModel() {
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-            // Ignoriramo
+
         }
     }
 

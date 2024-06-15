@@ -86,7 +86,7 @@ fun FoodItemScreen(navController: NavController, searchViewModel: SearchViewMode
                     tint = Color.White,
                     modifier = Modifier.clickable {
                         if (foodItem != null) {
-                            firebaseViewModel.addFood("ZVXZJfnhj3T8s6mntVSrdsQPupj2", Food(foodItem.ingredients[0].parsed[0].food , foodItem.totalNutrients.PROCNT.quantity * numOfServings, foodItem.totalNutrients.FAT.quantity *numOfServings, foodItem.totalNutrients.CHOCDF.quantity * numOfServings, foodItem.calories * numOfServings))
+                            firebaseViewModel.addFood( Food(foodItem.ingredients[0].parsed[0].food , foodItem.totalNutrients.PROCNT.quantity * numOfServings, foodItem.totalNutrients.FAT.quantity *numOfServings, foodItem.totalNutrients.CHOCDF.quantity * numOfServings, foodItem.calories * numOfServings))
                         }
                         navController.popBackStack()
                     }

@@ -17,7 +17,7 @@ import com.example.mymacrotracker.model.NavScreen
 fun BottomNavigationBar(
     tabs: List<NavScreen>,
     currentScreen: NavScreen,
-    onTabSelected: (NavScreen) -> Unit // Dodajte parametar za hvatanje događaja odabira taba
+    onTabSelected: (NavScreen) -> Unit
 ) {
     BottomAppBar(
         backgroundColor = Color(0xff5754F7),

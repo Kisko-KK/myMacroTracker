@@ -86,7 +86,6 @@ fun HomeScreen(firebaseViewModel: FirebaseViewModel, stepCounterViewModel: StepC
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Naziv aplikacije
             Text(
                 text = "MY MACRO TRACKER",
                 modifier = Modifier.fillMaxWidth(),
@@ -155,29 +154,29 @@ fun HomeScreen(firebaseViewModel: FirebaseViewModel, stepCounterViewModel: StepC
                         shape = RoundedCornerShape(30.dp)
                     )
                     .padding(25.dp),
-                contentAlignment = Alignment.Center // Pomicanje sadržaja prema sredini
+                contentAlignment = Alignment.Center
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically // Centriranje vertikalno
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Text(
-                            text = "CURRENT: ${currentSteps + currentStepsFirebase}",
+                            text = "CURRENT: ${(currentSteps + currentStepsFirebase).toInt()} steps",
                             style = MaterialTheme.typography.subtitle1.copy(
                                 fontStyle = FontStyle.Italic,
-                                fontSize = 20.sp // Povećanje veličine teksta
+                                fontSize = 20.sp
                             ),
                             color = Color.White
                         )
                         Text(
-                            text = "GOAL: ${stepsGoal.toInt()}",
+                            text = "GOAL: ${stepsGoal.toInt()} steps",
                             style = MaterialTheme.typography.subtitle1.copy(
                                 fontStyle = FontStyle.Italic,
-                                fontSize = 20.sp // Povećanje veličine teksta
+                                fontSize = 20.sp
                             ),
                             color = Color.White
                         )
@@ -190,8 +189,8 @@ fun HomeScreen(firebaseViewModel: FirebaseViewModel, stepCounterViewModel: StepC
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.iconwalk), // Povežite ikonu s vašim resursima
-                                contentDescription = null, // Postavite opis sadržaja na null ako ikona nema poseban opis
+                                painter = painterResource(id = R.drawable.iconwalk),
+                                contentDescription = null,
                                 modifier = Modifier.size(50.dp)
                             )
                             Text(
@@ -199,7 +198,7 @@ fun HomeScreen(firebaseViewModel: FirebaseViewModel, stepCounterViewModel: StepC
 
                                 style = MaterialTheme.typography.subtitle1.copy(
                                     fontStyle = FontStyle.Italic,
-                                    fontSize = 18.sp // Povećanje veličine teksta
+                                    fontSize = 18.sp
                                 ),
                                 color = Color.White
                             )
@@ -212,14 +211,12 @@ fun HomeScreen(firebaseViewModel: FirebaseViewModel, stepCounterViewModel: StepC
         }
 
     }
-    // Registracija senzora pri kreiranju HomeScreen-a
     DisposableEffect(Unit) {
         firebaseViewModel.getStepsGoal()
         stepCounterViewModel.registerSensorListener()
         firebaseViewModel.getCurrentSteps()
 
         onDispose {
-
             firebaseViewModel.setCurrentSteps(currentSteps+currentStepsFirebase)
             currentSteps = 0;
             stepCounterViewModel.unregisterSensorListener()

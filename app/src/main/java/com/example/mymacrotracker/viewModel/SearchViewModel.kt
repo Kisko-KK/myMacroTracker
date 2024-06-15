@@ -37,7 +37,6 @@ class SearchViewModel : ViewModel() {
 
                 val resultList = listOf(results1.await(), results2.await(), results3.await(), results4.await())
 
-                // Provera da li je hrana validna na osnovu podataka
                 val invalidFood = resultList.filter { it.calories == 0.0 && it.totalWeight == 0.0 }
                 if (invalidFood.isNotEmpty()) {
                     withContext(Dispatchers.Main) {

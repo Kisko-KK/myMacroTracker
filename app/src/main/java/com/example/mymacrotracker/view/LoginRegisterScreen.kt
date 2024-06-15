@@ -80,14 +80,12 @@ fun LoginRegisterScreen(navController: NavController, firebaseViewModel: Firebas
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { firebaseViewModel.signIn(email, password, context) },
-            //backgroundColor = Color(0xFF5754F7)
         ) {
             Text("Login", color = Color.White)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             onClick = { firebaseViewModel.register(email, password, context) },
-            //backgroundColor = Color(0xFF5754F7)
         ) {
             Text("Register", color = Color.White)
         }
